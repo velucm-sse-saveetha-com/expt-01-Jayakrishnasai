@@ -1,75 +1,36 @@
-G = [[ 0, 1, 1, 0, 1, 0],
+colors = ['Red', 'Blue', 'Green']
 
-     [ 1, 0, 1, 1, 0, 1],
+states = ['wa', 'nt', 'sa', 'q', 'nsw', 'v']
 
-     [ 1, 1, 0, 1, 1, 0],
+neighbors = {}
+neighbors['wa'] = ['nt', 'sa']
+neighbors['nt'] = ['wa', 'sa', 'q']
+neighbors['sa'] = ['wa', 'nt', 'q', 'nsw', 'v']
+neighbors['q'] = ['nt', 'sa', 'snw']
+neighbors['nsw'] = ['q', 'sa', 'v']
+neighbors['v'] = ['sa', 'nsw']
 
-     [ 0, 1, 1, 0, 0, 1],
 
-     [ 1, 0, 1, 0, 0, 1],
+colors_of_states = {}
 
-     [ 0, 1, 0, 1, 1, 0]]
+def promising(state, color):
+    for neighbor in neighbors.get(state): 
+        color_of_neighbor = colors_of_states.get(neighbor)
+        if color_of_neighbor == color:
+            return False
 
-node = "abcdef"
+    return True
 
-t_={}
+def get_color_for_state(state):
+    for color in colors:
+        if promising(state, color):
+            return color
 
-for i in range(len(G)):
+def main():
+    for state in states:
+        colors_of_states[state] = get_color_for_state(state)
 
-  t_[node[i]] = i
+    print(colors_of_states)
 
-degree =[]
 
-for i in range(len(G)):
-
-  degree.append(sum(G[i]))
-
-colorDict = {}
-
-for i in range(len(G)):
-
-  colorDict[node[i]]=["Blue","Red","Yellow","Green"]
-
-sortedNode=[]
-
-indeks = []
-
-for i in range(len(degree)):
-
-  _max = 0
-
-  j = 0
-
-  for j in range(len(degree)):
-
-    if j not in indeks:
-
-      if degree[j] > _max:
-
-        _max = degree[j]
-
-        idx = j
-
-  indeks.append(idx)
-
-  sortedNode.append(node[idx])
-
-theSolution={}
-
-for n in sortedNode:
-
-  setTheColor = colorDict[n]
-
-  theSolution[n] = setTheColor[0]
-
-  adjacentNode = G[t_[n]]
-
-  for j in range(len(adjacentNode)):
-
-    if adjacentNode[j]==1 and (setTheColor[0] in colorDict[node[j]]):
-
-      colorDict[node[j]].remove(setTheColor[0])
-
-for t,w in sorted(theSolution.items()):
-
-  print("Node",t," = ",w)
+main()
